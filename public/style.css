@@ -1,0 +1,99 @@
+/* styles */
+/* called by your view template */
+
+* {
+  box-sizing: border-box;
+  margin:0;
+  padding:0;
+}
+
+.signup {
+	border-radius: 999px;
+	border: 1px solid #c7c6c5;
+	padding: 5px;
+	width: 100%;
+  transition: box-shadow 0.3s;
+  margin-top:4px;
+}
+.signup:focus {
+  box-shadow: 0 0 5px gray;
+}
+.signup-flex {
+  position:fixed;
+  top:0;
+  left:0;
+  min-height:100vh;
+  width:100vw;
+  display:flex;
+}
+.signup-sglflex {
+  position:fixed;
+  top:0;
+  left:0;
+  min-height:100vh;
+  width:100vw;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+}
+.signup-dblflex {
+  /*height:100%;*/
+  width:50%;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+}
+.signup-wrapper {
+  box-shadow: 0 0 5px black;
+  border-radius:5px;
+  padding:12px;
+}
+
+.article {
+  margin-left:20%;
+  margin-right:20%;
+  margin-top:4%;
+  margin-bottom:4%;
+  padding:15px;
+}
+.article ul {
+  margin-left:20px;
+}
+.article h1,
+.article h2,
+.article h3,
+.article h4,
+.article h5,
+.article h6 {
+  margin-left:40px;
+}
+.dashpane {
+  margin-top:50px;
+  display:flex;
+  height:100vh;
+  width:100%;
+  justify-content: space-evenly;
+}
+.dashview {
+  width:33%;
+}
+@media (max-width: 768px) {
+  .dashview {
+    width:100%;
+  }
+  .dashpane {
+    flex-wrap:wrap;
+  }
+  .signup-dblflex {
+    width:100%;
+    height:initial;
+  }
+  .signup-flex {
+    flex-wrap:wrap;
+    position:initial;
+  }
+  .article {
+    margin:0;
+    padding:15px;
+  }
+}

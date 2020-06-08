@@ -1,0 +1,32 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sign and get signatures online">
+
+    <title>Digital Yearbook</title>
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/client.js" defer></script>
+  </head>
+  <body>
+    <div class="article">
+      <h1>
+        Report Comment
+      </h1>
+      <form action="/submitReport" method="post">
+        <input type="hidden" name="owner" value="<%= owner %>">
+        <input type="hidden" name="author" value="<%= author %>">
+        <textarea placeholder="Please describe the Problem" name="reason"></textarea>
+        <input type="submit" value="Submit Report">
+      </form>
+      <i>Thank you for keeping the Digital Yearbook a safe place for everyone</i>
+    </div>
+  </body>
+</html>

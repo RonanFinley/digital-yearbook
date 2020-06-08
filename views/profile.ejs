@@ -1,0 +1,116 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sign and get signatures online">
+
+    <title>Digital Yearbook</title>
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/client.js" defer></script>
+  </head>
+  <body>
+    <div class="article">
+      <h1>
+        <%= profile.fname+" "+profile.lname %>'s Yearbook
+      </h1>
+      <%
+      if(profile.student==0) {
+      %>
+      <b>Verified Teacher</b>
+      <%
+      }
+      %>
+      <div style="display:flex;margin-top:50px;">
+        
+        <div style="width:20%">
+          <h3>
+            Sign <%= profile.fname %>'s book!
+          </h3>
+          <% if(signed==false) { %>
+          <form action="/submit" method="post">
+            <input type="hidden" value="<%= profile.fname %>" name="tof">
+            <input type="hidden" value="<%= profile.lname %>" name="tol">
+            <textarea type="text" placeholder="Leave a note! (Optional)" name="comment" id="comment" style="resize:vertical;overflow-y:auto;"></textarea> <span id="count">0/500</span>
+            <div>
+              <%
+              if(viewer.acct.publicComments==0||profile.publicProfile==0) {
+              %>
+              <i>(i) Your comment will only be visible to <%= profile.fname %> and teachers</i>
+              <%
+               } else if(viewer.acct.publicComments) {
+		%> <i>(i) Your settings are set to make your comments public so long as others' yearbooks are set to public</i> <%
+		}
+              if(isNaN(comments)) {
+              %>
+              <i>(i) <%= profile.fname %>'s profile publically shows comments</i>
+              <%
+              }
+              %>
+            </div>
+            <input type="submit" value="Sign Book">
+          </form>
+          <script>
+            var comment = document.getElementById('comment');
+            var count = document.getElementById('count');
+            
+            comment.addEventListener('change', recount);
+            comment.addEventListener('keyup', recount);
+            
+            function recount() {
+              if(comment.value.length>500) {
+                comment.value = comment.value.substring(0,500);
+              }
+              count.innerHTML = comment.value.length + "/500";
+            }
+          </script>
+          <% } else if(signed==true) { %>
+          <b>
+            You have already signed <%= (profile.student==1?profile.fname:profile.lname) %>'s yearbook
+          </b>
+          <% } else { %>
+          <a href="/">Sign up or Log in to Sign <%= (profile.student==1?profile.fname:profile.lname) %>'s yearbook!</a>
+          <% } %>
+        </div>
+        <div style="width:80%">
+          <%
+          if(viewer.loggedin && viewer.acct.student==0) {
+          %>
+          <b>Comments are always shown on others' profiles because you are a teacher</b>
+          <%
+          }
+          if(isNaN(comments)){
+            for(var i = 0; i < comments.length; i++) {
+            %>
+            <div>
+              <p>
+                <b><%= comments[i].fname %></b> signed!
+              </p>
+              <%
+              if(comments[i].publicComments==1) {
+              %>
+              <div class="comment">
+                <%= comments[i].comment %> <a href="/report/<%= comments[i].owner %>/<%= comments[i].author %>" target="_blank">Report Comment</a>
+              </div>
+              <%
+              }
+              %>
+            </div>
+          <%
+            }
+          } else {
+          %>
+          <h1>
+            <%= comments %> Signatures
+          </h1>
+          <% } %>
+      </div>
+    </div>
+  </body>
+</html>

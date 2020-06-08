@@ -1,0 +1,144 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sign and get signatures online">
+
+    <title>Digital Yearbook</title>
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/client.js" defer></script>
+    <style>
+      .fname {
+        border-radius: 999px 0 0 999px;
+        width:100%;
+      }
+      .lname {
+        border-radius: 0 999px 999px 0;
+        width:100%;
+      }
+      label * {
+        text-align:center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="signup-sglflex">
+      <div class="signup-wrapper">
+        <h1 style="display:inline-block;">
+          Complete your profile
+        </h1>
+        <form action="/signup" method="POST">
+          <input placeholder="<%= email %>" value="<%= email %>" class="signup" disabled required>
+          <div style="display:flex;margin-top:15px;">
+            <div style="width:50%;">
+              <label>First Name
+              <input placeholder="<%= fname %>" value="<%= fname %>" class="signup fname" disabled required name="fname" id="fname"></label>
+              <div id="abuseWrapper">
+                <p id="abuse" style="display:none;">
+                  You may pick your own name, however abuse of this feature may result in it being reset to your Email's first name. It must be 2 or more characters long, and no longer than 20 characters. <b>You cannot change this later.</b>
+                </p>
+              </div>
+              <div style="display:flex;justify-content:center;align-items:center;">
+                <label style="margin-top:5px;">
+                  <input type="checkbox" id="newname"> I don't go by this name
+                </label>
+              </div>
+              
+            </div>
+            <div style="width:50%;">
+              <label>Last Name
+              <input placeholder="<%= lname %>" value="<%= lname %>" class="signup lname" disabled required></label>
+            </div>
+          </div>
+          <div style="background-color: #ff6b89; color:white; padding:5px; display:none;" id="passError" style="display:none;">
+          </div>
+          <div style="padding:15px">
+            <label>Pick a Password
+              <input type="password" placeholder="At least 8 characters" class="signup" required name="passwd" id="passwd"></label>
+            <label>Type password again
+              <input type="password" placeholder="Still 8 characters" class="signup" required id="passwd2"></label>
+          </div>
+          <label style="margin-top:5px;">
+            <input type="checkbox" id="tos"> I agree to the Terms and Conditions and Privacy Policy
+          </label>
+          <input type="submit" class="signup" value="Finish Signup" id="submit" style="display:none">
+          <input type="hidden" value="<%= key %>" name="key">
+        </form>
+        <a href="/legal" style="font-size:10px;">Terms and Conditions + Privacy Policy</a>
+      </div>
+    </div>
+    <script>
+      var passwd = document.getElementById("passwd");
+      var passwd2 = document.getElementById("passwd2");
+      var newname = document.getElementById("newname");
+      var fname = document.getElementById("fname");
+      var tos = document.getElementById("tos");
+      var errors = document.getElementById("passError");
+      var legal = "<%= fname %>";
+      
+      let pw2 = false;
+      let passwords = false;
+      
+      passwd.addEventListener('keyup', passwdCheck);
+      passwd2.addEventListener('keyup', () => {passwdCheck();pw2=true;});
+      passwd.addEventListener('change', passwdCheck);
+      passwd2.addEventListener('change', () => {passwdCheck();pw2=true;});
+      
+      newname.addEventListener('change', newnamehandle);
+      tos.addEventListener('change', validate);
+      
+      document.getElementById('abuse').style.width = document.getElementById("abuseWrapper").clientWidth + "px";
+      
+      function passwdCheck() {
+        var showErrors = false;
+        errors.innerHTML = "";
+        if(passwd.value.length<8) {
+          errors.innerHTML += "<p>Password must be at least 8 characters long";
+          showErrors = true;
+        }
+        if(passwd2.value.length>=0 && passwd2.value!==passwd.value && pw2) {
+          errors.innerHTML += "<p>Passwords do not match</p>";
+          showErrors = true;
+        } else
+        if(passwd.value.length==0 && pw2) {
+          errors.innerHTML+="<p>Retype Password</p>";
+          showErrors = true;
+        }
+        if(showErrors) {
+          errors.style.display = 'block';
+        }else {
+          errors.style.display = 'none';
+          passwords = true;
+          validate();
+        }
+      }
+      function newnamehandle() {
+        if(newname.checked) {
+          fname.disabled = false;
+          fname.focus();
+          document.getElementById("abuse").style.display = 'block';
+        } else {
+          fname.disabled = true;
+          fname.value = legal;
+          document.getElementById("abuse").style.display = 'none';
+        }
+      }
+      newnamehandle(); //sometimes refreshing screws with forms
+      function validate() {
+        if(tos.checked && passwords && fname.value.length>=2 && fname.value.length<=20) {
+          document.getElementById("submit").style.display = 'block';
+        } else {
+          document.getElementById("submit").style.display = 'none';
+        }
+      }
+      validate(); //sometimes refreshing screws with forms
+    </script>
+  </body>
+</html>

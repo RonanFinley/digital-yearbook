@@ -1,0 +1,140 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sign and get signatures online">
+
+    <title>Digital Yearbook</title>
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/client.js" defer></script>
+  </head>
+  <body>
+    <% if(!login||login.hasOwnProperty('acct')==false) { %>
+    <h1 style="text-align:center;font-size:76px;">
+      Digital Yearbook
+    </h1>
+    <div class="signup-flex">
+      
+      <div class="signup-dblflex">
+        <div class="signup-wrapper">
+          <h1>
+            Sign Up
+          </h1>
+          <form action="/signup" method="POST">
+            <input placeholder="Your Email (example.user@[s.]stemk12.org)" class="signup" required name="email">
+            <input type="submit" class="signup" value="Sign Up" id="submit">
+          </form>
+          <a href="/legal" style="font-size:10px;">Terms and Conditions + Privacy Policy</a>
+        </div>
+      </div>
+      <div class="signup-dblflex">
+        <div class="signup-wrapper">
+          <h1>
+            Log In
+          </h1>
+          <% if(loginerror) { %>
+          <%= loginerror %>
+          <% } %>
+          <form action="/login" method="POST">
+            <input placeholder="Your Email (example.user@[s.]stemk12.org)" class="signup" required name="email">
+            <input type="password" placeholder="Password" class="signup" name="passwd">
+            <input type="submit" class="signup" value="Log In" id="submitlogin">
+          </form>
+        </div>
+      </div>
+      
+    </div>
+    <% } else { %>
+    <div class="article">
+      <h1 style="font-size:72px;">
+        Hi, <%= login.acct.fname %>!
+      </h1>
+      <form action="/search" method="post">
+        <h2>
+          Search for people by Email
+        </h2>
+        <input type="email" placeholder="best.friend@s.stemk12.org" name="email">
+        <input type="submit" value="Search">
+      </form>
+      <div class="dashpane">
+        <div class="dashview">
+          <h1>
+            Your Yearbook Signatures
+          </h1>
+          <h1 style="font-size:72px">
+            <%= mybook.length %>
+          </h1>
+          <b>People have signed your yearbook</b>
+          <%for(var i = 0; i < mybook.length; i++) {
+            %>
+            <div>
+              <p>
+                <b><a href="/profile/<%= mybook[i].fname %>/<%=mybook[i].lname%>"><%= mybook[i].fname %></a></b> signed!
+              </p>
+              <div class="comment">
+                <%= mybook[i].comment %> <a href="/report/<%= mybook[i].owner %>/<%= mybook[i].author %>" target="_blank">Report Comment</a>
+              </div>
+            </div>
+          <%
+            }%>
+        </div>
+        <div class="dashview">
+          <h1>
+            Books You've Signed
+          </h1>
+          <h1 style="font-size:72px">
+            <%= isigned.length %>
+          </h1>
+          <b>Signatures</b>
+          <%for(var i = 0; i < isigned.length; i++) {
+            %>
+            <div>
+              <p>
+                You signed <b><%= isigned[i].fname %></b>'s book!
+              </p>
+              <div class="comment">
+                <%= isigned[i].comment %> <a href="/report/<%= isigned[i].owner %>/<%= isigned[i].author %>" target="_blank">Report Comment</a>
+              </div>
+            </div>
+          <%
+            }%>
+        </div>
+        <div class="dashview">
+          <h1>
+            Settings
+          </h1>
+          <form action="/settings" method="POST">
+            <p>
+              <label><input type="checkbox" name="publicProfile" <%= (login.acct.publicProfile) ? 'checked' : '' %>/>Make your profile publically viewable</label>
+            </p>
+            <i>(i) Amount of signatures will be shown instead. Teachers can always see profiles.</i><br/><br/>
+            <p>
+              <label><input type="checkbox" name="publicComments" <%= (login.acct.publicComments) ? 'checked' : '' %>/>Make my comments public</label>
+            </p>
+            
+            <i>(i) If disabled, only the people you've signed will be able to see your comments. Teachers can always see comments.</i>
+            <p>
+              <input type="submit" value="Save Settings">
+            </p>
+          </form>
+          <h1>
+            How to get Signatures
+          </h1>
+          <p>
+            Send your profile link to friends!
+          </p>
+          <a href="/profile/<%= login.acct.fname %>/<%= login.acct.lname %>"><%= process.env.DOMAIN %>/profile/<%= login.acct.fname %>/<%= login.acct.lname %></a>
+          <i>(Email this! Or send it on Discord!)</i>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </body>
+</html>
